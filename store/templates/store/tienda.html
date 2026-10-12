@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f7f5f0">
+    <title>Tienda EAFIT — objetos para aprender y crear</title>
+    <meta name="description" content="Descubre una selección de productos para acompañar tu vida universitaria.">
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #17251f;
+        --muted: #68736c;
+        --paper: #f7f5f0;
+        --surface: #fffefa;
+        --line: #e9e6dd;
+        --green: #244c3c;
+        --green-dark: #19392d;
+        --lime: #d9e8aa;
+        --orange: #d9875f;
+        --serif: Georgia, "Times New Roman", serif;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      * { box-sizing: border-box; }
+      body { margin: 0; background: var(--paper); color: var(--ink); }
+      button, input { font: inherit; }
+      a { color: inherit; }
+      .shell { width: min(1160px, calc(100% - 48px)); margin-inline: auto; }
+      .topbar { height: 78px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line); }
+      .brand { display: inline-flex; align-items: center; gap: 11px; text-decoration: none; font-size: 14px; font-weight: 750; letter-spacing: -.03em; }
+      .brand-mark { display: grid; width: 37px; height: 37px; place-items: center; border-radius: 12px; background: var(--green); color: white; font-family: var(--serif); font-size: 19px; }
+      .nav-note { color: var(--muted); font-size: 13px; }
+      .hero { position: relative; display: grid; min-height: 380px; grid-template-columns: 1.15fr .85fr; align-items: center; overflow: hidden; margin-top: 32px; padding: 58px 7.5%; border-radius: 22px; background: var(--green); color: white; }
+      .hero::before, .hero::after { position: absolute; content: ""; border: 1px solid rgb(255 255 255 / 14%); border-radius: 50%; }
+      .hero::before { width: 460px; height: 460px; right: -55px; top: -188px; }
+      .hero::after { width: 340px; height: 340px; right: 5px; top: -128px; }
+      .hero-copy { position: relative; z-index: 1; max-width: 560px; }
+      .eyebrow { display: inline-flex; align-items: center; gap: 9px; margin: 0 0 19px; color: var(--lime); font-size: 11px; font-weight: 750; letter-spacing: .16em; text-transform: uppercase; }
+      .eyebrow::before { width: 19px; height: 1px; background: currentColor; content: ""; }
+      h1 { max-width: 550px; margin: 0; font-family: var(--serif); font-size: clamp(42px, 5.2vw, 67px); font-weight: 400; letter-spacing: -.055em; line-height: .99; }
+      .hero-copy > p:last-child { max-width: 410px; margin: 22px 0 0; color: rgb(255 255 255 / 76%); font-size: 15px; line-height: 1.7; }
+      .hero-art { position: relative; display: grid; min-height: 230px; place-items: center; }
+      .sun { position: absolute; width: 190px; height: 190px; border-radius: 50%; background: #d9e8aa; }
+      .sun::after { position: absolute; inset: 15px; border: 1px solid rgb(36 76 60 / 24%); border-radius: inherit; content: ""; }
+      .book { position: relative; display: grid; width: 116px; height: 154px; place-items: center; transform: rotate(8deg); border: 1px solid rgb(255 255 255 / 40%); border-radius: 5px 12px 12px 5px; background: #d9875f; box-shadow: 12px 15px 24px rgb(14 34 25 / 22%); color: white; font-family: var(--serif); font-size: 19px; line-height: 1.1; text-align: center; }
+      .book::before { position: absolute; top: 0; bottom: 0; left: 12px; width: 1px; background: rgb(255 255 255 / 40%); content: ""; }
+      .book span { max-width: 70px; }
+      .catalog { padding: 68px 0 84px; }
+      .section-head { display: flex; align-items: end; justify-content: space-between; gap: 24px; margin-bottom: 27px; }
+      .section-kicker { margin: 0 0 8px; color: #758077; font-size: 11px; font-weight: 750; letter-spacing: .15em; text-transform: uppercase; }
+      h2 { margin: 0; font-family: var(--serif); font-size: clamp(32px, 4vw, 43px); font-weight: 400; letter-spacing: -.045em; }
+      .catalog-count { color: var(--muted); font-size: 13px; }
+      .product-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 19px; }
+      .product { overflow: hidden; border: 1px solid var(--line); border-radius: 17px; background: var(--surface); transition: transform .2s ease, box-shadow .2s ease; }
+      .product:hover { transform: translateY(-4px); box-shadow: 0 14px 32px rgb(27 43 34 / 8%); }
+      .product-visual { position: relative; display: grid; height: 200px; place-items: center; overflow: hidden; background: #e9eee2; }
+      .product:nth-child(3n + 2) .product-visual { background: #f2e9dc; }
+      .product:nth-child(3n) .product-visual { background: #e7eaf0; }
+      .product-visual::before, .product-visual::after { position: absolute; border: 1px solid rgb(36 76 60 / 14%); border-radius: 50%; content: ""; }
+      .product-visual::before { width: 190px; height: 190px; }
+      .product-visual::after { width: 145px; height: 145px; }
+      .product-symbol { position: relative; z-index: 1; display: grid; width: 76px; height: 88px; place-items: center; transform: rotate(-7deg); border: 1px solid rgb(36 76 60 / 18%); border-radius: 8px 12px 12px 8px; background: #fffefa; box-shadow: 8px 11px 20px rgb(27 43 34 / 12%); color: var(--green); font-family: var(--serif); font-size: 30px; }
+      .product:nth-child(3n + 2) .product-symbol { width: 69px; height: 97px; transform: rotate(7deg); border-radius: 19px 19px 15px 15px; background: #d9875f; color: white; font-size: 27px; }
+      .product:nth-child(3n) .product-symbol { transform: rotate(0); border-radius: 5px; background: #71838e; color: white; font-size: 25px; }
+      .stock-pill { position: absolute; z-index: 1; top: 14px; left: 14px; padding: 7px 10px; border: 1px solid rgb(255 255 255 / 70%); border-radius: 30px; background: rgb(255 254 250 / 84%); color: var(--green); font-size: 10px; font-weight: 700; }
+      .product-info { padding: 19px 19px 18px; }
+      .product-type { margin: 0 0 7px; color: #7b857e; font-size: 10px; font-weight: 750; letter-spacing: .13em; text-transform: uppercase; }
+      .product h3 { margin: 0; font-family: var(--serif); font-size: 21px; font-weight: 400; letter-spacing: -.025em; }
+      .description { min-height: 42px; margin: 8px 0 19px; color: var(--muted); font-size: 12px; line-height: 1.65; }
+      .product-buy { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding-top: 15px; border-top: 1px solid var(--line); }
+      .price { font-size: 15px; font-weight: 750; letter-spacing: -.03em; }
+      .buy-controls { display: flex; align-items: center; gap: 8px; }
+      .quantity { width: 48px; height: 38px; padding: 0 7px; border: 1px solid var(--line); border-radius: 8px; background: white; color: var(--ink); text-align: center; }
+      .buy-button { display: inline-flex; min-height: 38px; align-items: center; justify-content: center; gap: 7px; padding: 0 13px; border: 0; border-radius: 8px; background: var(--green); color: white; cursor: pointer; font-size: 12px; font-weight: 700; transition: background .18s ease; }
+      .buy-button:hover { background: var(--green-dark); }
+      .buy-button:disabled { background: #a3aaa4; cursor: not-allowed; }
+      .buy-button svg { width: 14px; height: 14px; }
+      .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; clip-path: inset(50%); }
+      .empty-state { padding: 45px 20px; border: 1px dashed #c9cec5; border-radius: 17px; color: var(--muted); text-align: center; }
+      .footer { display: flex; justify-content: space-between; gap: 20px; padding: 21px 0 28px; border-top: 1px solid var(--line); color: var(--muted); font-size: 11px; }
+      .footer a { text-decoration-color: #b7bdb6; text-underline-offset: 3px; }
+      .notice { position: fixed; z-index: 5; right: 24px; bottom: 24px; width: min(380px, calc(100vw - 32px)); padding: 16px 18px; transform: translateY(15px); border: 1px solid var(--line); border-radius: 13px; background: var(--surface); box-shadow: 0 12px 38px rgb(20 34 26 / 16%); opacity: 0; pointer-events: none; transition: opacity .2s ease, transform .2s ease; }
+      .notice.visible { transform: translateY(0); opacity: 1; }
+      .notice strong { display: block; margin-bottom: 4px; font-size: 13px; }
+      .notice span { color: var(--muted); font-size: 12px; line-height: 1.5; }
+      .notice.error strong { color: #a33e32; }
+      :focus-visible { outline: 3px solid #d9875f; outline-offset: 3px; }
+
+      @media (max-width: 760px) {
+        .shell { width: min(100% - 32px, 560px); }
+        .hero { min-height: 330px; grid-template-columns: 1fr; padding: 44px 8%; }
+        .hero-art { position: absolute; right: -40px; bottom: -75px; width: 220px; min-height: 220px; opacity: .35; }
+        .hero-copy { max-width: 460px; }
+        .hero-copy > p:last-child { max-width: 340px; }
+        .product-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 13px; }
+        .product-visual { height: 170px; }
+        .product-info { padding: 15px; }
+        .description { min-height: 58px; }
+        .product-buy { align-items: flex-start; flex-direction: column; }
+        .buy-controls { width: 100%; }
+        .buy-button { flex: 1; }
+      }
+      @media (max-width: 460px) {
+        .shell { width: calc(100% - 28px); }
+        .topbar { height: 66px; }
+        .nav-note { font-size: 11px; }
+        .hero { min-height: 340px; margin-top: 19px; padding: 39px 25px; border-radius: 17px; }
+        h1 { font-size: 47px; }
+        .hero-copy > p:last-child { font-size: 13px; }
+        .hero-art { right: -65px; bottom: -86px; }
+        .catalog { padding: 50px 0 60px; }
+        .section-head { align-items: flex-start; flex-direction: column; gap: 7px; }
+        .product-grid { grid-template-columns: 1fr; }
+        .product-visual { height: 190px; }
+        .product-buy { align-items: center; flex-direction: row; }
+        .buy-controls { width: auto; }
+        .buy-button { flex: initial; }
+        .description { min-height: initial; }
+        .footer { flex-direction: column; gap: 7px; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="shell topbar">
+      <a class="brand" href="/" aria-label="Tienda EAFIT, inicio">
+        <span class="brand-mark" aria-hidden="true">e</span>
+        <span>TIENDA EAFIT</span>
+      </a>
+      <span class="nav-note">Ideas para tu vida universitaria</span>
+    </header>
+
+    <main class="shell">
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-copy">
+          <p class="eyebrow">Hecho para aprender</p>
+          <h1 id="hero-title">Tu próxima<br>gran idea empieza aquí.</h1>
+          <p>Objetos cotidianos, diseñados para acompañar tus días de estudio, tus proyectos y todo lo que viene después.</p>
+        </div>
+        <div class="hero-art" aria-hidden="true">
+          <div class="sun"></div>
+          <div class="book"><span>Ideas<br>en<br>movimiento</span></div>
+        </div>
+      </section>
+
+      <section class="catalog" aria-labelledby="catalog-title">
+        <div class="section-head">
+          <div>
+            <p class="section-kicker">Una selección para ti</p>
+            <h2 id="catalog-title">Elige algo que te inspire.</h2>
+          </div>
+          <span class="catalog-count">{{ productos|length }} productos seleccionados</span>
+        </div>
+
+        {% if productos %}
+          <div class="product-grid">
+            {% for producto in productos %}
+              <article class="product" data-product-id="{{ producto.id }}">
+                <div class="product-visual" aria-hidden="true">
+                  <span class="stock-pill" data-stock-label>
+                    {% if producto.stock > 0 %}{{ producto.stock }} disponibles{% else %}Agotado{% endif %}
+                  </span>
+                  <span class="product-symbol">
+                    {% if forloop.counter|divisibleby:3 %}✳{% elif forloop.counter|divisibleby:2 %}◒{% else %}✦{% endif %}
+                  </span>
+                </div>
+                <div class="product-info">
+                  <p class="product-type">Selección del campus</p>
+                  <h3>{{ producto.nombre }}</h3>
+                  <p class="description">{{ producto.descripcion|default:"Un detalle especial para acompañar cada nuevo proyecto." }}</p>
+                  <div class="product-buy">
+                    <span class="price" data-price="{{ producto.precio }}">{{ producto.precio|floatformat:0 }} COP</span>
+                    <div class="buy-controls">
+                      <label class="sr-only" for="quantity-{{ producto.id }}">Cantidad de {{ producto.nombre }}</label>
+                      <input class="quantity" id="quantity-{{ producto.id }}" type="number" min="1" max="{{ producto.stock }}" value="1" inputmode="numeric" {% if producto.stock < 1 %}disabled{% endif %}>
+                      <button class="buy-button" type="button" data-buy {% if producto.stock < 1 %}disabled{% endif %}>
+                        <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M2.5 3.5h2l1.8 9.1a1.5 1.5 0 0 0 1.5 1.2h6.7a1.5 1.5 0 0 0 1.5-1.2l1.2-6.1H5.2M8 17h.01M14 17h.01" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        Comprar
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </article>
+            {% endfor %}
+          </div>
+        {% else %}
+          <div class="empty-state">
+            <p>Aún no hay productos en el catálogo.</p>
+            <p>Vuelve pronto para descubrir la colección.</p>
+          </div>
+        {% endif %}
+      </section>
+    </main>
+
+    <footer class="shell footer">
+      <span>© Tienda EAFIT · Una idea para cada día.</span>
+      <a href="/api/v1/comprar/">Explorar API</a>
+    </footer>
+
+    <div class="notice" id="notice" role="status" aria-live="polite">
+      <strong id="notice-title"></strong>
+      <span id="notice-message"></span>
+    </div>
+    {% csrf_token %}
+    <script>
+      const notice = document.querySelector("#notice");
+      const noticeTitle = document.querySelector("#notice-title");
+      const noticeMessage = document.querySelector("#notice-message");
+      let noticeTimer;
+
+      function showNotice(title, message, isError = false) {
+        noticeTitle.textContent = title;
+        noticeMessage.textContent = message;
+        notice.classList.toggle("error", isError);
+        notice.classList.add("visible");
+        window.clearTimeout(noticeTimer);
+        noticeTimer = window.setTimeout(() => notice.classList.remove("visible"), 5000);
+      }
+
+      function formatPrice(value) {
+        return new Intl.NumberFormat("es-CO", {
+          style: "currency",
+          currency: "COP",
+          maximumFractionDigits: 0,
+        }).format(Number(value));
+      }
+
+      function getErrorMessage(data) {
+        if (typeof data === "string") return data;
+        if (data && typeof data === "object") {
+          const detail = data.detail || data.cantidad || data.producto_id;
+          if (Array.isArray(detail)) return detail.join(" ");
+          if (typeof detail === "string") return detail;
+        }
+        return "No fue posible completar la compra. Inténtalo de nuevo.";
+      }
+
+      document.querySelectorAll("[data-buy]").forEach((button) => {
+        button.addEventListener("click", async () => {
+          const card = button.closest("[data-product-id]");
+          const quantityInput = card.querySelector(".quantity");
+          const cantidad = Number.parseInt(quantityInput.value, 10);
+          const maxStock = Number.parseInt(quantityInput.max, 10);
+
+          if (!Number.isInteger(cantidad) || cantidad < 1 || cantidad > maxStock) {
+            showNotice("Revisa la cantidad", `Puedes comprar entre 1 y ${maxStock} unidades.`, true);
+            quantityInput.focus();
+            return;
+          }
+
+          button.disabled = true;
+          const originalContent = button.innerHTML;
+          button.textContent = "Procesando…";
+
+          try {
+            const response = await fetch("/api/v1/comprar/", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value,
+              },
+              body: JSON.stringify({
+                producto_id: Number.parseInt(card.dataset.productId, 10),
+                cantidad,
+              }),
+            });
+            const result = await response.json();
+
+            if (!response.ok) {
+              showNotice("No se pudo completar", getErrorMessage(result), true);
+              return;
+            }
+
+            const remainingStock = Number(result.producto.stock);
+            quantityInput.max = String(remainingStock);
+            quantityInput.value = remainingStock > 0 ? "1" : "0";
+            quantityInput.disabled = remainingStock < 1;
+            card.querySelector("[data-stock-label]").textContent =
+              remainingStock > 0 ? `${remainingStock} disponibles` : "Agotado";
+            showNotice(
+              "¡Compra confirmada!",
+              `${result.producto.nombre} · ${cantidad} unidad${cantidad === 1 ? "" : "es"} · ${formatPrice(result.total)}`
+            );
+          } catch (error) {
+            console.error("No se pudo procesar la compra.", error);
+            showNotice("Error de conexión", "No pudimos contactar la tienda. Inténtalo de nuevo.", true);
+          } finally {
+            button.innerHTML = originalContent;
+            button.disabled = Number.parseInt(quantityInput.max, 10) < 1;
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
