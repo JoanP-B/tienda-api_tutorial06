@@ -23,31 +23,14 @@ class ComprarApiTests(TestCase):
         self.assertContains(response, "Tu próxima")
         self.assertContains(response, "Café EAFIT")
 
-    def test_get_lista_productos(self):
+    def test_get_productos_returns_json_catalog(self):
+        response = self.client.get("/api/v1/productos/")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()[0]["nombre"], "Café EAFIT")
+
+    def test_get_comprar_is_not_allowed(self):
         response = self.client.get("/api/v1/comprar/")
-
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json()[0]["nombre"], "Café EAFIT")
-
-    def test_get_api_en_navegador_muestra_tienda(self):
-        response = self.client.get(
-            "/api/v1/comprar/",
-            HTTP_ACCEPT="text/html",
-        )
-
-        self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "Elige algo que te inspire.")
-        self.assertContains(response, "Café EAFIT")
-        self.assertIn("csrftoken", response.cookies)
-
-    def test_get_api_con_accept_json_conserva_respuesta_json(self):
-        response = self.client.get(
-            "/api/v1/comprar/",
-            HTTP_ACCEPT="application/json",
-        )
-
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json()[0]["nombre"], "Café EAFIT")
+        self.assertEqual(response.status_code, 405)
 
     def test_post_compra_reduce_stock_and_returns_total(self):
         response = self.client.post(

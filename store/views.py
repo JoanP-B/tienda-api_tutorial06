@@ -1,8 +1,6 @@
 from django.shortcuts import render
-from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import ensure_csrf_cookie
 from rest_framework import status
-from rest_framework.renderers import JSONRenderer, TemplateHTMLRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -24,19 +22,13 @@ def tienda(request):
     )
 
 
-@method_decorator(ensure_csrf_cookie, name="dispatch")
-class ComprarView(APIView):
-    renderer_classes = [JSONRenderer, TemplateHTMLRenderer]
-
+class ProductosView(APIView):
     def get(self, request):
         productos = Producto.objects.all()
-        if request.accepted_renderer.format == "html":
-            return Response(
-                {"productos": productos},
-                template_name="store/tienda.html",
-            )
         return Response(ProductoSerializer(productos, many=True).data)
 
+
+class ComprarView(APIView):
     def post(self, request):
         request_serializer = CompraRequestSerializer(data=request.data)
         request_serializer.is_valid(raise_exception=True)

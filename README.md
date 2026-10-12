@@ -1,10 +1,10 @@
 # Tienda API: Django, Docker y AWS RDS MySQL
 
-La aplicación ofrece una tienda web en `/` y expone el catálogo y la operación
-de compra en `/api/v1/comprar/`. Nginx recibe las solicitudes HTTP en el puerto
-80 y las reenvía a Django, servido por Gunicorn en la red interna de Docker.
-Django se conecta a una instancia MySQL administrada (por ejemplo, AWS RDS),
-externa a Docker Compose.
+La aplicación ofrece una tienda web en `/`. Django expone el catálogo en
+`GET /api/v1/productos/` y procesa compras en `POST /api/v1/comprar/`. El
+microservicio Flask procesa `POST /api/v2/comprar`. Nginx enruta cada API a su
+servicio correspondiente. Django se conecta a una instancia MySQL administrada
+(por ejemplo, AWS RDS), externa a Docker Compose.
 
 ## Requisitos
 
@@ -47,15 +47,37 @@ docker compose logs --tail=100 web
 docker compose logs --tail=100 nginx
 ```
 
-El entrypoint ejecuta las migraciones y luego inicia Gunicorn. Solo Nginx publica
-un puerto en el host; Django escucha en el puerto 8000, accesible únicamente
-dentro de la red de Docker. Comprueba la tienda en `http://localhost/` o
-`http://localhost/api/v1/comprar/` desde el navegador. La segunda ruta muestra la
-misma tienda cuando se solicita HTML y conserva la respuesta JSON para clientes
-de la API. Para cargar los productos de demostración:
+El entrypoint de Django ejecuta las migraciones y luego inicia Gunicorn. La
+tienda está en `http://localhost/`; las rutas API responden JSON y no muestran la
+interfaz web. El catálogo de Django se consulta en
+`http://localhost/api/v1/productos/`. Para cargar los productos de demostración:
 
 ```bash
 docker compose exec web python manage.py seed_demo
+```
+
+Para probar el catálogo y las dos operaciones de compra desde PowerShell:
+
+```powershell
+Invoke-RestMethod -Uri "http://localhost/api/v1/productos/"
+
+Invoke-RestMethod -Uri "http://localhost/api/v1/comprar/" `
+  -Method Post `
+  -ContentType "application/json" `
+  -Body '{"producto_id":1,"cantidad":1}'
+
+Invoke-RestMethod -Uri "http://localhost/api/v2/comprar" `
+  -Method Post `
+  -ContentType "application/json" `
+  -Body '{"producto_id":1,"cantidad":1}'
+```
+
+La compra v1 se registra en Django y reduce el inventario de MySQL. La compra v2
+es una simulación procesada por Flask; no modifica el inventario de Django.
+Consulta los registros del proxy con:
+
+```powershell
+docker compose logs --tail=100 nginx
 ```
 
 Pruebas (requieren que el MySQL definido en `.env` esté disponible y permita crear
@@ -115,11 +137,11 @@ docker compose down
 En una actualización de una instalación existente, ejecuta `git pull` antes del
 comando de despliegue. Verifica que los contenedores `web` y `nginx` estén activos
 (MySQL/RDS continúa siendo un servicio administrado aparte). Abre
-`http://IP_PUBLICA_EC2/` o
-`http://IP_PUBLICA_EC2/api/v1/comprar/` para abrir la tienda. Los clientes de
-API que soliciten JSON siguen recibiendo el catálogo JSON en la segunda ruta.
-En ambas direcciones, omite `:8000`. Como comprobación de aislamiento,
-`http://IP_PUBLICA_EC2:8000/` no debe responder.
+`http://IP_PUBLICA_EC2/` para la tienda. Para consultar el catálogo usa
+`http://IP_PUBLICA_EC2/api/v1/productos/`; para las compras v1 y v2 usa
+`POST http://IP_PUBLICA_EC2/api/v1/comprar/` y
+`POST http://IP_PUBLICA_EC2/api/v2/comprar`, respectivamente. En todas las
+direcciones omite `:8000` y `:5000`; solo Nginx publica el puerto 80.
 
 ## Variables de entorno esperadas
 

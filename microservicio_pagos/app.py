@@ -3,7 +3,7 @@ from flask import Flask, jsonify, request
 app = Flask(__name__)
 
 
-@app.route("/api/v2/comprar", methods=["POST"])
+@app.route("/api/v2/comprar", methods=["POST"], strict_slashes=False)
 def realizar_compra():
     data = request.get_json(silent=True) or {}
     producto_id = data.get("producto_id")
