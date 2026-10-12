@@ -1,11 +1,12 @@
 from django.contrib import admin
 from django.urls import include, path
 
-from store.views import tienda
+from store.views import api_documentacion, tienda
 
 
 urlpatterns = [
     path("", tienda, name="tienda"),
+    path("api/", api_documentacion, name="api-documentacion"),
     path("admin/", admin.site.urls),
     path("api/v1/", include("store.urls")),
 ]

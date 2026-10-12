@@ -3,7 +3,8 @@
 La aplicación ofrece una tienda web en `/`. Django expone el catálogo en
 `GET /api/v1/productos/` y procesa compras en `POST /api/v1/comprar/`. El
 microservicio Flask procesa `POST /api/v2/comprar`. Nginx enruta cada API a su
-servicio correspondiente. Django se conecta a una instancia MySQL administrada
+servicio correspondiente. La guía visual de rutas se encuentra en `/api/`.
+Django se conecta a una instancia MySQL administrada
 (por ejemplo, AWS RDS), externa a Docker Compose.
 
 ## Requisitos

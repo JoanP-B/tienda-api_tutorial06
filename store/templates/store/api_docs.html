@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f5f6f2">
+    <title>API de Tienda EAFIT</title>
+    <style>
+      :root {
+        color-scheme: light;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        color: #18352b;
+        background: #f5f6f2;
+        font-synthesis: none;
+        text-rendering: optimizeLegibility;
+        --green: #244c3c;
+        --muted: #64736b;
+        --line: #e2e8e1;
+        --surface: #fff;
+      }
+
+      * { box-sizing: border-box; }
+      body { margin: 0; }
+      a { color: inherit; }
+      .shell { width: min(980px, calc(100% - 36px)); margin: 0 auto; }
+      header { display: flex; min-height: 76px; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line); }
+      .brand { display: flex; align-items: center; gap: 11px; font-weight: 750; text-decoration: none; }
+      .mark { display: grid; width: 38px; height: 38px; place-items: center; border-radius: 12px; background: var(--green); color: white; font-family: Georgia, serif; font-size: 20px; }
+      .back { color: var(--muted); font-size: 14px; text-decoration-thickness: 1px; text-underline-offset: 4px; }
+      main { padding: 58px 0 76px; }
+      .eyebrow { margin: 0 0 12px; color: #658170; font-size: 12px; font-weight: 750; letter-spacing: .13em; text-transform: uppercase; }
+      h1, h2, p { margin-top: 0; }
+      h1 { max-width: 680px; margin-bottom: 16px; font-family: Georgia, serif; font-size: clamp(40px, 7vw, 64px); font-weight: 400; letter-spacing: -.05em; line-height: 1.02; }
+      .intro { max-width: 660px; margin-bottom: 34px; color: var(--muted); font-size: 16px; line-height: 1.7; }
+      .notice { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 28px; padding: 17px 19px; border: 1px solid #dbe8d7; border-radius: 14px; background: #edf5e9; color: #34513e; font-size: 14px; line-height: 1.6; }
+      .notice strong { display: block; margin-bottom: 2px; }
+      .routes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+      .route { display: flex; flex-direction: column; min-height: 282px; padding: 23px; border: 1px solid var(--line); border-radius: 17px; background: var(--surface); box-shadow: 0 8px 25px rgb(31 55 40 / 4%); }
+      .route-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 18px; }
+      .method { padding: 6px 9px; border-radius: 7px; background: #e9f3e6; color: #2a6940; font-size: 11px; font-weight: 800; letter-spacing: .06em; }
+      .method.post { background: #fff0df; color: #965416; }
+      .version { color: #79857f; font-size: 12px; font-weight: 650; }
+      h2 { margin-bottom: 9px; font-family: Georgia, serif; font-size: 24px; font-weight: 400; }
+      .route p { margin-bottom: 19px; color: var(--muted); font-size: 14px; line-height: 1.6; }
+      code, pre { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; }
+      .path { display: block; overflow-wrap: anywhere; margin-bottom: 18px; padding: 11px 12px; border-radius: 9px; background: #f2f4f1; color: #263e33; font-size: 13px; }
+      .button, .link-button { display: inline-flex; min-height: 41px; align-items: center; justify-content: center; align-self: flex-start; padding: 0 14px; border: 0; border-radius: 9px; background: var(--green); color: white; cursor: pointer; font: inherit; font-size: 13px; font-weight: 700; text-decoration: none; }
+      .button:hover, .link-button:hover { background: #19392d; }
+      .result { display: none; margin-top: 15px; }
+      .result.visible { display: block; }
+      .result-label { display: block; margin-bottom: 7px; color: var(--muted); font-size: 12px; font-weight: 700; }
+      pre { overflow: auto; max-height: 240px; margin: 0; padding: 14px; border-radius: 10px; background: #17251f; color: #e6f1e9; font-size: 12px; line-height: 1.6; white-space: pre-wrap; overflow-wrap: anywhere; }
+      .hint { margin-top: 26px; padding: 18px 20px; border-left: 3px solid #d9875f; border-radius: 0 12px 12px 0; background: #fff9f3; color: #6e5a48; font-size: 14px; line-height: 1.65; }
+      footer { padding: 20px 0 28px; border-top: 1px solid var(--line); color: var(--muted); font-size: 12px; }
+      @media (max-width: 650px) {
+        .routes { grid-template-columns: 1fr; }
+        main { padding-top: 40px; }
+        header { min-height: 68px; }
+        .route { min-height: auto; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="shell">
+      <header>
+        <a class="brand" href="/" aria-label="Volver a Tienda EAFIT">
+          <span class="mark" aria-hidden="true">E</span>
+          <span>Tienda EAFIT <span style="color:#758077;font-weight:500">/ API</span></span>
+        </a>
+        <a class="back" href="/">Volver a la tienda</a>
+      </header>
+
+      <main>
+        <p class="eyebrow">Guía rápida · API v1 y v2</p>
+        <h1>Prueba las rutas de la tienda.</h1>
+        <p class="intro">Cada ruta tiene un propósito y un método HTTP. Para consultar productos usa GET; para enviar una compra usa POST.</p>
+
+        <aside class="notice">
+          <span aria-hidden="true">ⓘ</span>
+          <div><strong>¿Por qué aparece “405 Method Not Allowed”?</strong>Estás haciendo GET en una ruta que solo acepta POST. Para ver productos, usa el botón GET del catálogo.</div>
+        </aside>
+
+        <section class="routes" aria-label="Rutas de la API">
+          <article class="route">
+            <div class="route-top">
+              <span class="method">GET</span>
+              <span class="version">Django · API v1</span>
+            </div>
+            <h2>Consultar catálogo</h2>
+            <p>Obtén la lista de productos, sus precios y existencias. Esta ruta sí se puede abrir directamente en el navegador.</p>
+            <code class="path">/api/v1/productos/</code>
+            <button class="button" id="get-catalog" type="button">Consultar catálogo</button>
+            <div class="result" id="catalog-result" aria-live="polite">
+              <span class="result-label" id="catalog-status">Respuesta JSON</span>
+              <pre id="catalog-json"></pre>
+            </div>
+          </article>
+
+          <article class="route">
+            <div class="route-top">
+              <span class="method post">POST</span>
+              <span class="version">Django · API v1</span>
+            </div>
+            <h2>Registrar una compra</h2>
+            <p>Registra la compra en la base de datos y descuenta las existencias. Debes enviar un ID de producto y una cantidad.</p>
+            <code class="path">/api/v1/comprar/</code>
+            <pre>{"producto_id": 1, "cantidad": 1}</pre>
+          </article>
+
+          <article class="route">
+            <div class="route-top">
+              <span class="method post">POST</span>
+              <span class="version">Flask · API v2</span>
+            </div>
+            <h2>Probar el microservicio</h2>
+            <p>Envía una compra de prueba al nuevo servicio Flask. En esta versión, la compra es simulada y no descuenta inventario.</p>
+            <code class="path">/api/v2/comprar</code>
+            <pre>{"producto_id": 1, "cantidad": 2}</pre>
+          </article>
+
+          <article class="route">
+            <div class="route-top">
+              <span class="method">HTML</span>
+              <span class="version">Tienda</span>
+            </div>
+            <h2>Comprar desde la tienda</h2>
+            <p>Usa la interfaz de la tienda para seleccionar productos, indicar cantidades y hacer una compra en Django.</p>
+            <code class="path">/</code>
+            <a class="link-button" href="/">Abrir la tienda</a>
+          </article>
+        </section>
+
+        <p class="hint"><strong>Para Postman:</strong> crea una solicitud nueva, selecciona el método indicado (GET o POST), usa la URL mostrada y, para POST, configura <code>Body → raw → JSON</code> con el ejemplo de la tarjeta.</p>
+      </main>
+
+      <footer>Tienda EAFIT · Django v1 + Flask v2</footer>
+    </div>
+    <script>
+      const catalogButton = document.querySelector("#get-catalog");
+      const catalogResult = document.querySelector("#catalog-result");
+      const catalogStatus = document.querySelector("#catalog-status");
+      const catalogJson = document.querySelector("#catalog-json");
+
+      catalogButton.addEventListener("click", async () => {
+        catalogButton.disabled = true;
+        catalogButton.textContent = "Consultando…";
+        catalogResult.classList.add("visible");
+
+        try {
+          const response = await fetch("/api/v1/productos/", {
+            headers: { Accept: "application/json" },
+          });
+          const body = await response.json();
+          catalogStatus.textContent = `Respuesta HTTP ${response.status}`;
+          catalogJson.textContent = JSON.stringify(body, null, 2);
+        } catch (error) {
+          console.error("No se pudo consultar el catálogo.", error);
+          catalogStatus.textContent = "No se pudo conectar con la API";
+          catalogJson.textContent = "Comprueba que el servicio esté activo y que la base de datos sea accesible.";
+        } finally {
+          catalogButton.disabled = false;
+          catalogButton.textContent = "Consultar catálogo";
+        }
+      });
+    </script>
+  </body>
+</html>
